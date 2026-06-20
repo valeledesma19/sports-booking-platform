@@ -4,6 +4,7 @@ import com.valentina.sportsbooking.auth.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -34,10 +35,36 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
+
+                        // AUTH público
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/deportes/**").permitAll()
-                        .requestMatchers("/api/canchas/**").permitAll()
-                        .requestMatchers("/api/reservas/**").authenticated()
+
+                        // Lectura pública
+                        .requestMatchers(HttpMethod.GET, "/api/deportes/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/canchas/**").permitAll()
+
+                        // Deportes solo ADMIN
+                        .requestMatchers(HttpMethod.POST, "/api/deportes/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/deportes/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/deportes/**").hasRole("ADMIN")
+
+                        // Canchas solo ADMIN
+                        .requestMatchers(HttpMethod.POST, "/api/canchas/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/canchas/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/canchas/**").hasRole("ADMIN")
+
+                        // Reservas cliente o admin
+                        .requestMatchers(HttpMethod.POST, "/api/reservas").hasAnyRole("CLIENTE", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/reservas/mis-reservas").hasAnyRole("CLIENTE", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/reservas/*/cancelar").hasAnyRole("CLIENTE", "ADMIN")
+
+                        // Reservas solo ADMIN
+                        .requestMatchers(HttpMethod.GET, "/api/reservas").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/reservas/usuario/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/reservas/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/reservas/*/confirmar").hasRole("ADMIN")
+
+                        // Cualquier otra petición requiere login
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())

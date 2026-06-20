@@ -20,6 +20,14 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
     List<Reserva> findByFecha(LocalDate fecha);
 
+    List<Reserva> findByFechaBetween(LocalDate fechaInicio, LocalDate fechaFin);
+
+    Long countByFecha(LocalDate fecha);
+
+    Long countByFechaBetween(LocalDate fechaInicio, LocalDate fechaFin);
+
+    Long countByEstado(EstadoReserva estado);
+
     @Query("""
             SELECT COUNT(r) > 0
             FROM Reserva r

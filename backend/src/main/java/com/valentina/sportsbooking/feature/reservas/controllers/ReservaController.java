@@ -32,6 +32,12 @@ public class ReservaController {
         return ResponseEntity.ok(reservas);
     }
 
+    @GetMapping("/mis-reservas")
+    public ResponseEntity<List<ReservaResponse>> listarMisReservas() {
+        List<ReservaResponse> reservas = reservaService.listarMisReservas();
+        return ResponseEntity.ok(reservas);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ReservaResponse> obtenerReservaPorId(
             @PathVariable Long id

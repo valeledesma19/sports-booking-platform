@@ -12,9 +12,6 @@ import java.time.LocalTime;
 @Setter
 public class CrearReservaRequest {
 
-    @NotNull(message = "El usuario es obligatorio")
-    private Long usuarioId;
-
     @NotNull(message = "La cancha es obligatoria")
     private Long canchaId;
 

@@ -9,9 +9,12 @@ import com.valentina.sportsbooking.feature.reservas.dto.response.ReservaResponse
 import com.valentina.sportsbooking.feature.reservas.model.EstadoReserva;
 import com.valentina.sportsbooking.feature.reservas.model.Reserva;
 import com.valentina.sportsbooking.feature.reservas.repository.ReservaRepository;
+import com.valentina.sportsbooking.feature.usuarios.model.Rol;
 import com.valentina.sportsbooking.feature.usuarios.model.Usuario;
 import com.valentina.sportsbooking.feature.usuarios.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -29,8 +32,7 @@ public class ReservaService {
 
         validarHorario(request);
 
-        Usuario usuario = usuarioRepository.findById(request.getUsuarioId())
-                .orElseThrow(() -> new NotFoundException("El usuario no existe"));
+        Usuario usuario = obtenerUsuarioAutenticado();
 
         Cancha cancha = canchaService.buscarCanchaPorId(request.getCanchaId());
 
@@ -72,6 +74,16 @@ public class ReservaService {
                 .toList();
     }
 
+    public List<ReservaResponse> listarMisReservas() {
+
+        Usuario usuario = obtenerUsuarioAutenticado();
+
+        return reservaRepository.findByUsuarioId(usuario.getId())
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
     public List<ReservaResponse> listarReservasPorUsuario(Long usuarioId) {
         return reservaRepository.findByUsuarioId(usuarioId)
                 .stream()
@@ -106,6 +118,12 @@ public class ReservaService {
     public ReservaResponse cancelarReserva(Long id) {
 
         Reserva reserva = buscarReservaPorId(id);
+        Usuario usuario = obtenerUsuarioAutenticado();
+
+        if (usuario.getRol() == Rol.CLIENTE &&
+                !reserva.getUsuario().getId().equals(usuario.getId())) {
+            throw new BadRequestException("No podés cancelar una reserva que no es tuya");
+        }
 
         if (reserva.getEstado() == EstadoReserva.FINALIZADA) {
             throw new BadRequestException("Una reserva finalizada no puede cancelarse");
@@ -125,6 +143,18 @@ public class ReservaService {
     public Reserva buscarReservaPorId(Long id) {
         return reservaRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("La reserva no existe"));
+    }
+
+    private Usuario obtenerUsuarioAutenticado() {
+
+        Authentication authentication = SecurityContextHolder
+                .getContext()
+                .getAuthentication();
+
+        String email = authentication.getName();
+
+        return usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("El usuario autenticado no existe"));
     }
 
     private void validarHorario(CrearReservaRequest request) {

@@ -12,4 +12,5 @@ public interface CanchaRepository extends JpaRepository<Cancha, Long> {
     List<Cancha> findByDeporteId(Long deporteId);
 
     List<Cancha> findByDeporteIdAndActivaTrue(Long deporteId);
+    boolean existsByDeporteId(Long deporteId);
 }

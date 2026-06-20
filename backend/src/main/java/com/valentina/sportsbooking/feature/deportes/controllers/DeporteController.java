@@ -1,5 +1,6 @@
 package com.valentina.sportsbooking.feature.deportes.controllers;
 
+import com.valentina.sportsbooking.feature.deportes.dto.request.ActualizarDeporteRequest;
 import com.valentina.sportsbooking.feature.deportes.dto.request.CrearDeporteRequest;
 import com.valentina.sportsbooking.feature.deportes.dto.response.DeporteResponse;
 import com.valentina.sportsbooking.feature.deportes.services.DeporteService;
@@ -38,5 +39,22 @@ public class DeporteController {
     ) {
         DeporteResponse deporte = deporteService.obtenerDeportePorId(id);
         return ResponseEntity.ok(deporte);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<DeporteResponse> actualizarDeporte(
+            @PathVariable Long id,
+            @Valid @RequestBody ActualizarDeporteRequest request
+    ) {
+        DeporteResponse response = deporteService.actualizarDeporte(id, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarDeporte(
+            @PathVariable Long id
+    ) {
+        deporteService.eliminarDeporte(id);
+        return ResponseEntity.noContent().build();
     }
 }

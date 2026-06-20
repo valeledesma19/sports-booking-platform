@@ -10,4 +10,6 @@ public interface DeporteRepository extends JpaRepository<Deporte, Long> {
     Optional<Deporte> findByNombre(String nombre);
 
     boolean existsByNombre(String nombre);
+
+
 }

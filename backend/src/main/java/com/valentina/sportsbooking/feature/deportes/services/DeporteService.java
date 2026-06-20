@@ -2,6 +2,8 @@ package com.valentina.sportsbooking.feature.deportes.services;
 
 import com.valentina.sportsbooking.exceptions.BadRequestException;
 import com.valentina.sportsbooking.exceptions.NotFoundException;
+import com.valentina.sportsbooking.feature.canchas.repository.CanchaRepository;
+import com.valentina.sportsbooking.feature.deportes.dto.request.ActualizarDeporteRequest;
 import com.valentina.sportsbooking.feature.deportes.dto.request.CrearDeporteRequest;
 import com.valentina.sportsbooking.feature.deportes.dto.response.DeporteResponse;
 import com.valentina.sportsbooking.feature.deportes.model.Deporte;
@@ -10,12 +12,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class DeporteService {
 
     private final DeporteRepository deporteRepository;
+    private final CanchaRepository canchaRepository;
 
     public DeporteResponse crearDeporte(CrearDeporteRequest request) {
 
@@ -42,6 +46,37 @@ public class DeporteService {
     public DeporteResponse obtenerDeportePorId(Long id) {
         Deporte deporte = buscarDeportePorId(id);
         return mapToResponse(deporte);
+    }
+
+    public DeporteResponse actualizarDeporte(Long id, ActualizarDeporteRequest request) {
+
+        Deporte deporte = buscarDeportePorId(id);
+
+        Optional<Deporte> deporteConMismoNombre = deporteRepository.findByNombre(request.getNombre());
+
+        if (deporteConMismoNombre.isPresent()
+                && !deporteConMismoNombre.get().getId().equals(id)) {
+            throw new BadRequestException("Ya existe otro deporte con ese nombre");
+        }
+
+        deporte.setNombre(request.getNombre());
+
+        Deporte deporteActualizado = deporteRepository.save(deporte);
+
+        return mapToResponse(deporteActualizado);
+    }
+
+    public void eliminarDeporte(Long id) {
+
+        Deporte deporte = buscarDeportePorId(id);
+
+        boolean tieneCanchas = canchaRepository.existsByDeporteId(id);
+
+        if (tieneCanchas) {
+            throw new BadRequestException("No se puede eliminar el deporte porque tiene canchas asociadas");
+        }
+
+        deporteRepository.delete(deporte);
     }
 
     public Deporte buscarDeportePorId(Long id) {

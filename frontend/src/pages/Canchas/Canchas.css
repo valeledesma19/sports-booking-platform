@@ -1,0 +1,45 @@
+.canchas-page {
+  width: 100%;
+}
+
+.canchas-layout {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.cancha-form h2,
+.canchas-list h2 {
+  margin-bottom: 20px;
+  color: #111827;
+  font-size: 24px;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+  color: #374151;
+  font-weight: bold;
+}
+
+.canchas-list {
+  overflow-x: auto;
+}
+
+.cancha-form {
+  border-top: 5px solid #374151;
+}
+
+.canchas-list {
+  border-top: 5px solid #374151;
+}
+
+@media (max-width: 1000px) {
+  .canchas-layout {
+    grid-template-columns: 1fr;
+  }
+}
+

@@ -43,4 +43,9 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
             @Param("horaFin") LocalTime horaFin,
             @Param("estadoCancelada") EstadoReserva estadoCancelada
     );
+    List<Reserva> findByCancha_IdAndFechaAndEstadoNot(
+            Long canchaId,
+            LocalDate fecha,
+            EstadoReserva estado
+    );
 }

@@ -1,0 +1,109 @@
+.sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background: #0f172a;
+  color: white;
+  padding: 24px 18px;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-header {
+  background: linear-gradient(135deg, #1f2937, #374151);
+  padding: 18px;
+  border-radius: 18px;
+  margin-bottom: 28px;
+}
+
+.sidebar-header h2 {
+  font-size: 21px;
+  margin-bottom: 8px;
+}
+
+.sidebar-header p {
+  font-size: 13px;
+  color: #f3f4f6;
+  word-break: break-all;
+}
+
+.role-badge {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.sidebar-nav a {
+  padding: 13px 14px;
+  border-radius: 14px;
+  color: #d1d5db;
+  transition: 0.2s;
+  font-weight: bold;
+}
+
+.sidebar-nav a:hover {
+  background: #1f2937;
+  color: white;
+}
+
+.sidebar-nav a.active {
+  background: #374151;
+  color: white;
+  box-shadow: 0 8px 20px rgba(22, 163, 74, 0.28);
+}
+
+.logout-button {
+  border: none;
+  padding: 13px;
+  border-radius: 14px;
+  background: #dc2626;
+  color: white;
+  font-weight: bold;
+  margin-top: auto;
+  transition: 0.2s;
+}
+
+.logout-button:hover {
+  background: #b91c1c;
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+    padding: 18px;
+  }
+
+  .sidebar-header {
+    margin-bottom: 18px;
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .sidebar-nav a {
+    flex: 1;
+    min-width: 140px;
+    text-align: center;
+  }
+
+  .logout-button {
+    margin-top: 16px;
+  }
+}
+

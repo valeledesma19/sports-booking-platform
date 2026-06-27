@@ -12,11 +12,15 @@ import com.valentina.sportsbooking.feature.reservas.repository.ReservaRepository
 import com.valentina.sportsbooking.feature.usuarios.model.Rol;
 import com.valentina.sportsbooking.feature.usuarios.model.Usuario;
 import com.valentina.sportsbooking.feature.usuarios.repository.UsuarioRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+
+import java.time.LocalDate;
+import java.util.List;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -96,24 +100,7 @@ public class ReservaService {
         return mapToResponse(reserva);
     }
 
-    public ReservaResponse confirmarReserva(Long id) {
 
-        Reserva reserva = buscarReservaPorId(id);
-
-        if (reserva.getEstado() == EstadoReserva.CANCELADA) {
-            throw new BadRequestException("Una reserva cancelada no puede confirmarse");
-        }
-
-        if (reserva.getEstado() == EstadoReserva.FINALIZADA) {
-            throw new BadRequestException("Una reserva finalizada no puede modificarse");
-        }
-
-        reserva.setEstado(EstadoReserva.CONFIRMADA);
-
-        Reserva reservaActualizada = reservaRepository.save(reserva);
-
-        return mapToResponse(reservaActualizada);
-    }
 
     public ReservaResponse cancelarReserva(Long id) {
 
@@ -188,4 +175,40 @@ public class ReservaService {
                 .deporteNombre(reserva.getCancha().getDeporte().getNombre())
                 .build();
     }
+    @Transactional
+    public ReservaResponse confirmarReserva(Long id) {
+        Reserva reserva = reservaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
+
+        if (reserva.getEstado() == EstadoReserva.CANCELADA) {
+            throw new RuntimeException("No se puede confirmar una reserva cancelada");
+        }
+
+        if (reserva.getEstado() == EstadoReserva.FINALIZADA) {
+            throw new RuntimeException("No se puede confirmar una reserva finalizada");
+        }
+
+        reserva.setEstado(EstadoReserva.CONFIRMADA);
+
+        Reserva reservaGuardada = reservaRepository.save(reserva);
+
+        return mapToResponse(reservaGuardada);
+    }
+
+    @Transactional
+    public ReservaResponse finalizarReserva(Long id) {
+        Reserva reserva = reservaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
+
+        if (reserva.getEstado() == EstadoReserva.CANCELADA) {
+            throw new RuntimeException("No se puede finalizar una reserva cancelada");
+        }
+
+        reserva.setEstado(EstadoReserva.FINALIZADA);
+
+        Reserva reservaGuardada = reservaRepository.save(reserva);
+
+        return mapToResponse(reservaGuardada);
+    }
+
 }

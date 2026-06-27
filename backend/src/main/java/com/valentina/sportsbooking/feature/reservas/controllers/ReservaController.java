@@ -1,14 +1,22 @@
 package com.valentina.sportsbooking.feature.reservas.controllers;
 
 import com.valentina.sportsbooking.feature.reservas.dto.request.CrearReservaRequest;
+import com.valentina.sportsbooking.feature.reservas.dto.response.HorarioOcupadoResponse;
 import com.valentina.sportsbooking.feature.reservas.dto.response.ReservaResponse;
+import com.valentina.sportsbooking.feature.reservas.model.EstadoReserva;
 import com.valentina.sportsbooking.feature.reservas.services.ReservaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import com.valentina.sportsbooking.feature.reservas.dto.response.HorarioOcupadoResponse;
+import com.valentina.sportsbooking.feature.reservas.repository.ReservaRepository;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -17,6 +25,7 @@ import java.util.List;
 public class ReservaController {
 
     private final ReservaService reservaService;
+    private final ReservaRepository reservaRepository;
 
     @PostMapping
     public ResponseEntity<ReservaResponse> crearReserva(
@@ -54,19 +63,33 @@ public class ReservaController {
         return ResponseEntity.ok(reservas);
     }
 
-    @PutMapping("/{id}/confirmar")
-    public ResponseEntity<ReservaResponse> confirmarReserva(
-            @PathVariable Long id
-    ) {
-        ReservaResponse response = reservaService.confirmarReserva(id);
-        return ResponseEntity.ok(response);
+
+    @PatchMapping("/{id}/cancelar")
+    public ReservaResponse cancelarReserva(@PathVariable Long id) {
+        return reservaService.cancelarReserva(id);
     }
 
-    @PutMapping("/{id}/cancelar")
-    public ResponseEntity<ReservaResponse> cancelarReserva(
-            @PathVariable Long id
+    @GetMapping("/ocupadas")
+    public List<HorarioOcupadoResponse> obtenerHorariosOcupados(
+            @RequestParam Long canchaId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha
     ) {
-        ReservaResponse response = reservaService.cancelarReserva(id);
-        return ResponseEntity.ok(response);
+        return reservaRepository
+                .findByCancha_IdAndFechaAndEstadoNot(canchaId, fecha, EstadoReserva.CANCELADA)
+                .stream()
+                .map(reserva -> new HorarioOcupadoResponse(
+                        reserva.getHoraInicio().toString(),
+                        reserva.getHoraFin().toString()
+                ))
+                .toList();
+    }
+    @PatchMapping("/{id}/confirmar")
+    public ReservaResponse confirmarReserva(@PathVariable Long id) {
+        return reservaService.confirmarReserva(id);
+    }
+
+    @PatchMapping("/{id}/finalizar")
+    public ReservaResponse finalizarReserva(@PathVariable Long id) {
+        return reservaService.finalizarReserva(id);
     }
 }

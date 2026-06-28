@@ -12,7 +12,7 @@ import PublicRoute from "../components/PublicRoute/PublicRoute";
 import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
 import MainLayout from "../components/MainLayout/MainLayout";
 import Home from "../pages/Home/Home";
-
+import Calendario from "../pages/Calendario/Calendario";
 function AppRoutes() {
   return (
     <Routes>
@@ -96,6 +96,16 @@ function AppRoutes() {
           <ProtectedRoute roles={["USER","CLIENTE"]}>
             <MainLayout>
               <MisReservas />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/calendario"
+        element={
+          <ProtectedRoute>
+            <MainLayout>
+              <Calendario />
             </MainLayout>
           </ProtectedRoute>
         }

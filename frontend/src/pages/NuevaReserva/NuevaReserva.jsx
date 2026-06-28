@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { getCanchasActivas } from "../../services/canchaService";
 import { getDeportes } from "../../services/deporteService";
 import { crearReserva, getHorariosOcupados } from "../../services/reservaService";
@@ -12,6 +12,7 @@ const obtenerFechaHoy = () => {
 
 function NuevaReserva() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const [canchas, setCanchas] = useState([]);
   const [deportes, setDeportes] = useState([]);
@@ -193,8 +194,7 @@ function NuevaReserva() {
       });
 
       setHorariosOcupadosPorCancha(horariosPorCancha);
-      setHoraInicio("");
-      setHoraFin("");
+
     } catch (error) {
       setError(error.message || "Error al cargar horarios ocupados");
     } finally {
@@ -205,6 +205,17 @@ function NuevaReserva() {
   useEffect(() => {
     cargarDatos();
   }, []);
+  useEffect(() => {
+    const canchaParam = searchParams.get("canchaId");
+    const fechaParam = searchParams.get("fecha");
+    const inicioParam = searchParams.get("horaInicio");
+    const finParam = searchParams.get("horaFin");
+
+    if (canchaParam) setCanchaId(canchaParam);
+    if (fechaParam) setFecha(fechaParam);
+    if (inicioParam) setHoraInicio(inicioParam);
+    if (finParam) setHoraFin(finParam);
+  }, [searchParams]);
 
   useEffect(() => {
     cargarHorariosOcupados();

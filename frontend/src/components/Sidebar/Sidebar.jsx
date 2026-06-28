@@ -21,6 +21,7 @@ function Sidebar() {
 
       <nav className="sidebar-nav">
         <NavLink to="/dashboard">Dashboard</NavLink>
+        <NavLink to="/calendario">Calendario</NavLink>
 
         {isAdmin() ? (
           <>

@@ -1,0 +1,159 @@
+.calendario-page {
+  width: 100%;
+}
+
+.calendario-filtros {
+  display: grid;
+  grid-template-columns: 1fr 220px auto;
+  gap: 18px;
+  align-items: end;
+  margin-bottom: 24px;
+}
+
+.calendar-week-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.calendar-week-actions button {
+  border: none;
+  background: #111827;
+  color: white;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-weight: 800;
+}
+
+.calendario-info {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.calendario-info h2 {
+  margin-bottom: 6px;
+}
+
+.calendario-info p {
+  color: #6b7280;
+  font-weight: 700;
+}
+
+.calendar-legend {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.legend-item {
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.legend-item.free {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.legend-item.busy {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.legend-item.mine {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.calendario-wrapper {
+  overflow-x: auto;
+}
+
+.calendar-grid {
+  min-width: 900px;
+  display: grid;
+  grid-template-columns: 90px repeat(7, 1fr);
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.calendar-header-cell {
+  background: #111827;
+  color: white;
+  padding: 14px 10px;
+  text-align: center;
+  border-right: 1px solid #374151;
+}
+
+.calendar-header-cell strong {
+  display: block;
+  text-transform: capitalize;
+  margin-bottom: 4px;
+}
+
+.calendar-header-cell span {
+  color: #d1d5db;
+}
+
+.calendar-hour {
+  background: #f9fafb;
+  color: #111827;
+  padding: 14px 10px;
+  font-weight: 800;
+  border-right: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: center;
+}
+
+.calendar-cell {
+  padding: 14px 10px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 800;
+  border-right: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.calendar-cell.free {
+  background: white;
+  color: #6b7280;
+}
+
+.calendar-cell.busy {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.calendar-cell.mine {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+@media (max-width: 1000px) {
+  .calendario-filtros {
+    grid-template-columns: 1fr;
+  }
+
+  .calendario-info {
+    grid-template-columns: 1fr;
+  }
+
+  .calendar-legend {
+    flex-wrap: wrap;
+  }
+}
+.calendar-cell.clickable {
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.calendar-cell.clickable:hover {
+  background: #e5e7eb;
+  color: #111827;
+  transform: scale(1.02);
+}

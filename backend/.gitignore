@@ -31,3 +31,36 @@ build/
 
 ### VS Code ###
 .vscode/
+# Variables y secretos
+.env
+.env.*
+!.env.example
+
+# Backend secrets
+backend/src/main/resources/application.properties
+backend/src/main/resources/application.yml
+backend/src/main/resources/application-prod.properties
+
+# Java / Spring
+target/
+*.class
+*.jar
+*.war
+
+# Node / React
+node_modules/
+dist/
+build/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/

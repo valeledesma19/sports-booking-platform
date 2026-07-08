@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080/api";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
 
 export const getAuthHeaders = () => {
   const token = localStorage.getItem("token");
@@ -10,4 +10,6 @@ export const getAuthHeaders = () => {
 };
 
 export default API_URL;
+
+
 

@@ -297,7 +297,7 @@
   }
 }
 
-@media (max-width: 700px) {
+@media (width <= 700px) {
   .booking-hero {
     padding: 24px;
   }
@@ -311,4 +311,6 @@
   }
 
   .form-row {
-
+    grid-template-columns: 1fr;
+  }
+}
